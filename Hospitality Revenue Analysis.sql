@@ -1,15 +1,20 @@
 /* 1. Retreive total property for each property category */
 
-select category, count(*) as tot_cust from dim_hotels
+select category, count(*) as tot_property from dim_hotels
 group by category;
 
+/* 2. Retreive total property for each city */
 
-/* 1. Retreive the data for total no of guests for each property category*/
+select city, count(*) as tot_property from dim_hotels
+group by city;
 
-select dh.category, sum(fb.no_guests)
-from fact_bookings fb left join dim_hotels dh
-on fb.property_id = dh.property_id
-group by dh.category;
+/* 3. Retreive total property for each property name */
+
+select property_name, count(*) tot_property from dim_hotels
+group by property_name
+order by tot_property desc;
+
+
 
 
 
