@@ -1,22 +1,18 @@
-/* 1. Retreive total property for each property category */
+use atliq_hospitality_db;
 
-select category, count(*) as tot_property from dim_hotels
-group by category;
+/* 1. Retreive total revenue generated and revenue realised */
 
-/* 2. Retreive total property for each city */
+select avg(revenue_generated) avg_rev_generated, avg(revenue_realized) avg_rev_realized
+from fact_bookings;
 
-select city, count(*) as tot_property from dim_hotels
-group by city;
+/* 2. Retreive average revenue generated and revenue realized for each property */
 
-/* 3. Retreive total property for each property name */
+select dh.property_name, round(avg(revenue_generated),2) avg_revenue_generated, round(avg(revenue_realized),2) avg_revenue_realized
+from fact_bookings fb left join dim_hotels dh
+on fb.property_id = dh.property_id
+group by dh.property_name;
 
-select property_name, count(*) tot_property from dim_hotels
-group by property_name
-order by tot_property desc;
-
-
-
-
+select * from dim_hotels;
 
 
 
