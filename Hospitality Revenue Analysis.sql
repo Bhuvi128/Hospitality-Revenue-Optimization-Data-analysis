@@ -24,5 +24,5 @@ for all room class, indicating in all room class there may be cancelled bookings
 be fincancial impact in this pattern.
 */
 
-
+select * from fact_aggregated_bookings;
 
