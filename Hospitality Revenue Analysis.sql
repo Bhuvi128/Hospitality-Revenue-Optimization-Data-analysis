@@ -1,6 +1,6 @@
 use atliq_hospitality_db;
 
-/* Data Preparation/cleaning */
+/* ----------------------------------------  Data Preparation/cleaning  ---------------------------------- */
 
 /* 1. Check for duplicates */
 
@@ -56,7 +56,11 @@ describe dim_rooms; -- Valid data types
 -- Lets check for dim date table
 describe dim_date; -- valid data types
 
-/* Data analysis */
+
+
+/* ------------------------------------   Data analysis ------------------------------------- */
+
+
 
 /* 1. Retreive total bookings from fact_bookings table */
 
@@ -81,6 +85,18 @@ from
 (select * from fact_bookings
 where booking_status = 'Cancelled') fb left join dim_rooms dr
 on fb.room_category = dr.room_id; -- Fetched revenue generated and realized for each room class for cancelled bookings by joining dim room table and fact bookings table and filtered booking status cancelled.
+
+/* 5. Acquire revenue generated and realized by property category along with booking status */
+
+select dh.category, fb.booking_status, fb.revenue_generated, fb.revenue_realized
+from fact_bookings fb left join dim_hotels dh
+on fb.property_id = dh.property_id; -- Gathered revenue generated and realized for each property category along with booking status by joining dim hotels table and fact booking table.
+
+/* 6. Fetch revenue generated and realized by property name along with booking status*/
+
+select dh.property_name, fb.booking_status, fb.revenue_generated, fb.revenue_realized 
+from dim_hotels dh right join fact_bookings fb
+on dh.property_id = fb.property_id; 
 
 
 
