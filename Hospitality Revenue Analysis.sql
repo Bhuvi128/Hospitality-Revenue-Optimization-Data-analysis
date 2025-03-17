@@ -63,24 +63,24 @@ describe dim_date; -- valid data types
 select count(*) total_bookings  -- Extracted total bookings using count of bookings from fact bookings table
 from fact_bookings;
 
-/* 2. Retreive revenue generated and realized by booking status */
+/* 2. Gather revenue generated and realized by booking status */
 
 select booking_status, revenue_generated, revenue_realized
 from fact_bookings;  -- Extracted revenue generated and realized by booking_status
 
-/* 3. Retreive revenue generated and realized by room class */
+/* 3. Fetch revenue generated and realized by room class */
 
 select dr.room_class, fb.revenue_generated, fb.revenue_realized
 from fact_bookings fb left join dim_rooms dr
-on fb.room_category = dr.room_id;  -- Retreived revenue generated and realized for each room class by joining dim rooms table and fact bookings table
+on fb.room_category = dr.room_id; -- Retreived revenue generated and realized for each room class by joining dim rooms table and fact bookings table
 
-/* 4. Retreive revenue generated and realized by room class for cancelled bookings */
+/* 4. Obtain revenue generated and realized by room class for cancelled bookings */
 
 select dr.room_class, booking_status, revenue_generated, revenue_realized
 from
 (select * from fact_bookings
 where booking_status = 'Cancelled') fb left join dim_rooms dr
-on fb.room_category = dr.room_id
+on fb.room_category = dr.room_id; -- Fetched revenue generated and realized for each room class for cancelled bookings by joining dim room table and fact bookings table and filtered booking status cancelled.
 
 
 
