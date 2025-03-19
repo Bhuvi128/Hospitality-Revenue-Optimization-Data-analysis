@@ -98,8 +98,11 @@ select dh.property_name, fb.booking_status, fb.revenue_generated, fb.revenue_rea
 from dim_hotels dh right join fact_bookings fb
 on dh.property_id = fb.property_id; 
 
+/* 7. What is the revenue generated and realized by property city and booking status? */
 
-
+select dh.city, fb.booking_status, fb.revenue_generated, fb.revenue_realized
+from dim_hotels dh right join fact_bookings fb
+on dh.property_id = fb.property_id;
 
 
 
