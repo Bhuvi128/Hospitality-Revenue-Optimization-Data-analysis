@@ -106,9 +106,12 @@ on dh.property_id = fb.property_id;
 
 /* 6. what is the revenue generated and realized by booking month? */
 
-select month(booking_date) booking_month, revenue_generated, revenue_realized
+select month(booking_date) booking_month, booking_status, revenue_generated, revenue_realized
 from fact_bookings
 order by booking_month;
+
+
+select * from fact_bookings;
 
 
 
