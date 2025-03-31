@@ -91,3 +91,4 @@ ignore 1 rows;
 select * from fact_bookings;
 
 */
+

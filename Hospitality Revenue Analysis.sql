@@ -1,8 +1,30 @@
+/*
+===============================================================================================================================================================================
+===============================================================================================================================================================================
+								-- Hospitality Revenue Optimization --
+===============================================================================================================================================================================
+===============================================================================================================================================================================
+
+*/
+
+-- Problem Statement:
+/*
+AtliQ Grands owns multiple five-star hotels across India. They have been in the hospitality industry for the past 20 years. 
+Due to strategic moves from other competitors and ineffective decision-making in management, AtliQ Grands are losing its market share 
+and revenue in the luxury/business hotels category. As a strategic move, the managing director of AtliQ Grands wanted to 
+incorporate “Business and Data Intelligence” to regain their market share and revenue. However, they do not have an in-house data analytics
+team to provide them with these insights.
+Their revenue management team had decided to hire a 3rd party service provider to provide them with insights from their historical data.
+*/
+
 use atliq_hospitality_db;
 
-/* ----------------------------------------  Data Preparation/cleaning  ---------------------------------- */
+/*
+===================================================================================================================================================
+----------------------------------------  Data Preparation and cleaning  --------------------------------------------------------------------------
+===================================================================================================================================================
+*/
 
-/* 1. Check for duplicates */
 
 -- Are there duplicate entries in the fact_bookings table?
 
@@ -56,55 +78,80 @@ describe dim_rooms; -- Valid data types
 -- Are there any invalid data types in dim_date?
 describe dim_date; -- valid data types
 
+/*
+=======================================================================================================================================================
+------------------------------------------------------- Exploratory Data analysis ---------------------------------------------------------------------
+=======================================================================================================================================================
+*/
 
+/* How many total bookings exist in the fact_bookings table? */
 
-/* ------------------------------------   Data analysis ------------------------------------- */
-
-
-
-/* 1. How many total bookings exist in the fact_bookings table? */
-
-select count(*) total_bookings  -- Extracted total bookings using count of bookings from fact bookings table
+select count(*) total_bookings  
 from fact_bookings;
 
-/* 2. What is the revenue generated and realized by each booking status? */
+/* How are bookings distributed among different booking statuses? */
+
+select booking_status, count(*) total_bookings
+from fact_bookings
+group by booking_status;
+
+/* Retreive revenue generated from fact bookings to calculate summary statistics and its distribution analysis */
+
+select revenue_generated from fact_bookings;
+
+/* Retreive revenue realized from fact bookings to calculate summary statistics and its distribution analysis */
+
+select revenue_realized from fact_bookings;
+
+/* Retreive revenue generated and realized and check relationship between them */
+
+select revenue_generated, revenue_realized from fact_bookings;
+
+/* Does booking status impact the difference between revenue generated and revenue realized? */
 
 select booking_status, revenue_generated, revenue_realized
-from fact_bookings;  -- Extracted revenue generated and realized by booking_status
+from fact_bookings;  
 
-/* 3. What is the revenue generated and realized for each room class? */
+/* How bookings are distributed among room class */
+
+select dr.room_class, count(*) total_bookings
+from dim_rooms dr right join fact_bookings fb
+on dr.room_id = fb.room_category
+group by dr.room_class;
+
+/* What is the revenue generated and realized for each room class? */
 
 select dr.room_class, fb.revenue_generated, fb.revenue_realized
 from fact_bookings fb left join dim_rooms dr
-on fb.room_category = dr.room_id; -- Retreived revenue generated and realized for each room class by joining dim rooms table and fact bookings table
+on fb.room_category = dr.room_id; 
 
-/* 4. For cancelled bookings, what is the revenue generated and realized for each room class? */
+/* For cancelled bookings, what is the revenue generated and realized for each room class? */
 
 select dr.room_class, booking_status, revenue_generated, revenue_realized
 from
 (select * from fact_bookings
 where booking_status = 'Cancelled') fb left join dim_rooms dr
-on fb.room_category = dr.room_id; -- Fetched revenue generated and realized for each room class for cancelled bookings by joining dim room table and fact bookings table and filtered booking status cancelled.
+on fb.room_category = dr.room_id; 
 
-/* 5. What is the revenue generated and realized by property category and booking status? */
+/* What is the revenue generated and realized by property category and booking status? */
 
 select dh.category, fb.booking_status, fb.revenue_generated, fb.revenue_realized
 from fact_bookings fb left join dim_hotels dh
-on fb.property_id = dh.property_id; -- Gathered revenue generated and realized for each property category along with booking status by joining dim hotels table and fact booking table.
+on fb.property_id = dh.property_id; 
 
-/* 6. What is the revenue generated and realized by property name and booking status? */
+/* What is the revenue generated and realized by property name and booking status? */
 
 select dh.property_name, fb.booking_status, fb.revenue_generated, fb.revenue_realized 
 from dim_hotels dh right join fact_bookings fb
 on dh.property_id = fb.property_id; 
 
-/* 7. What is the revenue generated and realized by property city and booking status? */
+/* What is the revenue generated and realized by property city and booking status? */
 
 select dh.city, fb.booking_status, fb.revenue_generated, fb.revenue_realized
 from dim_hotels dh right join fact_bookings fb
 on dh.property_id = fb.property_id;
 
-/* 6. what is the revenue generated and realized by booking month? */
+/* what is the revenue generated and realized by booking month? */
 
 select month(booking_date) booking_month, booking_status, revenue_generated, revenue_realized
 from fact_bookings
