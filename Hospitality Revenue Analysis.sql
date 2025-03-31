@@ -133,17 +133,41 @@ from
 where booking_status = 'Cancelled') fb left join dim_rooms dr
 on fb.room_category = dr.room_id; 
 
+/* How bookings are distributed across property category */
+
+select dh.category, count(*) total_bookings
+from fact_bookings fb left join dim_hotels dh
+on fb.property_id = dh.property_id
+group by dh.category
+order by total_bookings desc;
+
 /* What is the revenue generated and realized by property category and booking status? */
 
 select dh.category, fb.booking_status, fb.revenue_generated, fb.revenue_realized
 from fact_bookings fb left join dim_hotels dh
 on fb.property_id = dh.property_id; 
 
+/* How the bookings distributed across properties? */
+
+select dh.property_name, count(*) total_bookings
+from fact_bookings fb left join dim_hotels dh
+on fb.property_id = dh.property_id
+group by dh.property_name
+order by total_bookings desc;
+
 /* What is the revenue generated and realized by property name and booking status? */
 
 select dh.property_name, fb.booking_status, fb.revenue_generated, fb.revenue_realized 
 from dim_hotels dh right join fact_bookings fb
 on dh.property_id = fb.property_id; 
+
+/* How the bookings distributed across properties? */
+
+select dh.city, count(*) total_bookings
+from fact_bookings fb left join dim_hotels dh
+on fb.property_id = dh.property_id
+group by dh.city
+order by total_bookings desc;
 
 /* What is the revenue generated and realized by property city and booking status? */
 
