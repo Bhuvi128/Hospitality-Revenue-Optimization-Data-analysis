@@ -161,7 +161,7 @@ select dh.property_name, fb.booking_status, fb.revenue_generated, fb.revenue_rea
 from dim_hotels dh right join fact_bookings fb
 on dh.property_id = fb.property_id; 
 
-/* How the bookings distributed across properties? */
+/* How the bookings distributed across cities? */
 
 select dh.city, count(*) total_bookings
 from fact_bookings fb left join dim_hotels dh
@@ -175,15 +175,51 @@ select dh.city, fb.booking_status, fb.revenue_generated, fb.revenue_realized
 from dim_hotels dh right join fact_bookings fb
 on dh.property_id = fb.property_id;
 
+/* How bookings distributed across different months */
+
+select month(booking_date) booking_month, count(*) total_bookings
+from fact_bookings
+group by booking_month
+order by booking_month;
+
 /* what is the revenue generated and realized by booking month? */
 
 select month(booking_date) booking_month, booking_status, revenue_generated, revenue_realized
 from fact_bookings
 order by booking_month;
 
+/* How bookings distributed among number of guests */
 
-select * from fact_bookings;
+select no_guests, count(*) total_bookings
+from fact_bookings
+group by no_guests
+order by no_guests;
 
+/* Do no of guests impact on revenue generated and realized */
 
+select no_guests, booking_status, revenue_generated, revenue_realized
+from fact_bookings
+order by no_guests;
 
+/* How bookings are distributed among booking platforms */
 
+select booking_platform, count(*) total_bookings
+from fact_bookings
+group by booking_platform
+order by total_bookings;
+
+/* Do booking platforms impact revenue loss from cancellations */
+
+with platform_revenue as (
+select booking_platform, booking_status, revenue_generated, revenue_realized
+from fact_bookings
+)
+select * from platform_revenue
+where booking_status = 'Cancelled';
+
+/* How much ratings are given for most of the bookings */
+
+select ratings_given, count(*) total_bookings
+from fact_bookings
+group by ratings_given
+order by ratings_given;
