@@ -257,3 +257,12 @@ from fact_bookings
 where booking_status = 'Cancelled'
 order by stay_duration;
 
+/* Is cancellations happening more in weekend or weekday */
+
+select dd.day_type, 
+sum(case when fb.booking_status = 'Cancelled' then 1 else 0 end) cancelled_bookings,
+sum(case when fb.booking_status != 'Cancelled' then 1 else 0 end) successfull_bookings
+from fact_bookings fb left join dim_date dd
+on fb.check_in_date = dd.date_d
+group by dd.day_type
+order by cancelled_bookings desc;
