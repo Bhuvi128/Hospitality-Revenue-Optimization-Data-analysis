@@ -223,3 +223,37 @@ select ratings_given, count(*) total_bookings
 from fact_bookings
 group by ratings_given
 order by ratings_given;
+
+
+/* Do ratings impact from cancellations */
+
+select ratings_given, booking_status, revenue_generated,
+revenue_realized
+from fact_bookings
+where booking_status = 'Cancelled'
+order by ratings_given;
+
+/* Do 0 ratings apply only to cancelled bookings, or also to checked-out and no-show bookings */
+
+select ratings_given, booking_status, revenue_generated,
+revenue_realized
+from fact_bookings
+where booking_status != 'Cancelled'
+order by ratings_given;
+
+/* What is the typical stay duration for most bookings */
+
+select datediff(checkout_date, check_in_date) stay_duration, 
+count(*) total_bookings
+from fact_bookings
+group by stay_duration
+order by stay_duration;
+
+/* What is the typical stay duration for cancelled bookings */
+
+select datediff(checkout_date, check_in_date) stay_duration, 
+booking_status, revenue_generated, revenue_realized
+from fact_bookings
+where booking_status = 'Cancelled'
+order by stay_duration;
+
