@@ -266,3 +266,13 @@ from fact_bookings fb left join dim_date dd
 on fb.check_in_date = dd.date_d
 group by dd.day_type
 order by cancelled_bookings desc;
+
+/* Is specific week no have higher or lower successful and cancelled bookings */
+
+select dd.week_no, 
+sum(case when fb.booking_status = 'Cancelled' then 1 else 0 end) cancelled_bookings,
+sum(case when fb.booking_status != 'Cancelled' then 1 else 0 end) successfull_bookings
+from fact_bookings fb left join dim_date dd
+on fb.check_in_date = dd.date_d
+group by dd.week_no
+order by dd.week_no;
