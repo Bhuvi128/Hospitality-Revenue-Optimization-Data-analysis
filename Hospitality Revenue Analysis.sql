@@ -275,4 +275,16 @@ sum(case when fb.booking_status != 'Cancelled' then 1 else 0 end) successfull_bo
 from fact_bookings fb left join dim_date dd
 on fb.check_in_date = dd.date_d
 group by dd.week_no
-order by dd.week_no;
+order by cancelled_bookings, successfull_bookings;
+
+/* How much successfull bookings and capacity in particular check in date */
+
+select check_in_date, 
+sum(successful_bookings) as total_successful_bookings,
+sum(capacity) as total_capacity,
+round(sum(successful_bookings) * 100 / sum(capacity)) as occupancy_rate
+from fact_aggregated_bookings
+group by check_in_date
+order by check_in_date;
+
+
